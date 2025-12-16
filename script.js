@@ -94,23 +94,75 @@ document.addEventListener('DOMContentLoaded', () => {
         searchInput.addEventListener('input', filterData);
         categoryFilter.addEventListener('change', filterData);
 
-        // Helper function to calculate check-in time (20 minutes before start)
-        function getCheckinTime(timeStr) {
-            // Extract start time from format like "08:40~10:10"
-            const startTime = timeStr.split('~')[0];
-            const [hours, minutes] = startTime.split(':').map(Number);
+        // Helper function to get grade from class (e.g., "403" -> 4, "502" -> 5)
+        function getGrade(classStr) {
+            return parseInt(classStr.charAt(0));
+        }
 
-            // Calculate 20 minutes before
-            let checkinMinutes = minutes - 20;
-            let checkinHours = hours;
+        // Get color based on check-in time
+        function getCheckinTimeColor(checkinTime) {
+            const colorMap = {
+                '08:20': '#2e7d32', // 深綠色
+                '08:50': '#1565c0', // 深藍色
+                '09:00': '#6a1b9a', // 紫色
+                '10:10': '#d35400', // 橙色
+                '10:50': '#c62828', // 紅色
+                '11:05': '#00838f'  // 青色
+            };
+            return colorMap[checkinTime] || '#666';
+        }
 
-            if (checkinMinutes < 0) {
-                checkinMinutes += 60;
-                checkinHours -= 1;
+        // Get check-in time based on category and grade
+        function getCheckinTimeByGrade(category, classStr) {
+            const grade = getGrade(classStr);
+
+            // Special check-in times by category and grade
+            if (category === '字音字形') {
+                return '11:05';
+            } else if (category === '國語說故事') {
+                if (grade === 2) {
+                    return '08:20';
+                } else {
+                    return '08:50'; // 3年級
+                }
+            } else if (category === '作文') {
+                return '10:10';
+            } else if (category === '英語朗讀') {
+                if (grade === 5) {
+                    return '09:00';
+                } else {
+                    return '08:20'; // 4年級、6年級
+                }
+            } else if (category === '國語朗讀') {
+                if (grade === 5) {
+                    return '10:50';
+                } else {
+                    return '10:10'; // 4年級、6年級
+                }
+            } else if (category === '閩南語朗讀') {
+                return '08:20';
             }
 
-            // Format with leading zeros
-            return `${String(checkinHours).padStart(2, '0')}:${String(checkinMinutes).padStart(2, '0')}`;
+            // Default fallback: 20 minutes before start time
+            return null;
+        }
+
+        // Get display text for category-level check-in time
+        function getCategoryCheckinDisplay(category) {
+            if (category === '字音字形') {
+                return '11:05';
+            } else if (category === '國語說故事') {
+                return '08:20（2年級）、08:50（3年級）';
+            } else if (category === '作文') {
+                return '10:10';
+            } else if (category === '英語朗讀') {
+                return '08:20（4年級、6年級）、09:00（5年級）';
+            } else if (category === '國語朗讀') {
+                return '10:10（4年級、6年級）、10:50（5年級）';
+            } else if (category === '閩南語朗讀') {
+                return '08:20';
+            }
+            return '';
         }
 
         // Render Logic
@@ -137,8 +189,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 section.className = 'card';
                 section.style.marginBottom = '32px';
 
-                // Calculate check-in time
-                const checkinTime = getCheckinTime(items[0].time);
+                // Get check-in time display for category
+                const checkinDisplay = getCategoryCheckinDisplay(category);
 
                 // Header for the category section
                 const headerHtml = `
@@ -148,30 +200,34 @@ document.addEventListener('DOMContentLoaded', () => {
                             📅 ${items[0].date} | 📍 ${items[0].location} | ⏰ ${items[0].time}
                         </p>
                         <p style="margin: 5px 0 0; font-size: 0.9rem; color: #d35400; font-weight: bold;">
-                            🔔 報到時間：${checkinTime}
+                            🔔 報到時間：${checkinDisplay}
                         </p>
                     </div>
                 `;
 
-                // Table
+                // Table with check-in time column
                 let tableHtml = `
                     <table>
                         <thead>
                             <tr>
-                                <th width="15%">序號/編號</th>
-                                <th width="20%">班級</th>
-                                <th width="65%">姓名</th>
+                                <th width="10%">序號</th>
+                                <th width="15%">班級</th>
+                                <th width="40%">姓名</th>
+                                <th width="35%">報到時間</th>
                             </tr>
                         </thead>
                         <tbody>
                 `;
 
                 items.forEach(item => {
+                    const checkinTime = getCheckinTimeByGrade(category, item.class);
+                    const checkinColor = getCheckinTimeColor(checkinTime);
                     tableHtml += `
                         <tr>
                             <td>${item.number}</td>
                             <td>${item.class}</td>
                             <td><strong>${item.name}</strong></td>
+                            <td style="color: ${checkinColor}; font-weight: bold;">${checkinTime}</td>
                         </tr>
                     `;
                 });
