@@ -206,3 +206,23 @@ footer {
     nav ul { flex-direction: column; text-align: center; gap: var(--spacing-sm); }
     .card-grid { grid-template-columns: 1fr; }
 }
+
+/* Flashing NEW Icon */
+@keyframes flash {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.new-icon {
+    display: inline-block;
+    background-color: #ff4757;
+    color: white;
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: 5px;
+    vertical-align: middle;
+    animation: flash 1s infinite;
+    font-weight: bold;
+}

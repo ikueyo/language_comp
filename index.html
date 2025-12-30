@@ -72,7 +72,7 @@
                     style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 8px 15px; border-radius: 5px; text-decoration: none;">📁
                     比賽題目連結</a>
             </li>
-            <li><a href="#" class="nav-link" data-target="winners">榮譽榜</a></li>
+            <li><a href="#" class="nav-link" data-target="winners">榮譽榜 <span class="new-icon">NEW</span></a></li>
         </ul>
     </nav>
 
@@ -214,11 +214,26 @@
 
         <!-- WINNERS SECTION -->
         <section id="winners" class="tab-content">
-            <div class="card empty-state">
-                <div style="font-size: 3rem; margin-bottom: 20px;">🏆</div>
-                <h3>比賽尚未結束</h3>
-                <p>競賽成績將於賽後公告於此，敬請期待！</p>
-                <button class="btn nav-trigger" data-target="home" style="margin-top: 20px;">返回首頁</button>
+            <div class="card" style="text-align: center;">
+                <h2 class="section-title">榮譽榜</h2>
+                <p style="margin-bottom: 30px; font-size: 1.1rem;">恭喜所有獲獎同學！請點擊下方按鈕查看詳細名單與評語。</p>
+
+                <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                    <a href="https://drive.google.com/file/d/1BlJSp-ffmgCKikXRqWa403sf2TabjrTs/view" target="_blank"
+                        class="btn" style="background-color: #d35400; font-size: 1.1rem; padding: 15px 30px;">
+                        🏆 語文競賽個人成績優勝名單
+                    </a>
+
+                    <a href="https://drive.google.com/drive/u/1/folders/1ktP8NjODUqkVD1LBy58rX3fO9W5nrQTV"
+                        target="_blank" class="btn"
+                        style="background-color: #27ae60; font-size: 1.1rem; padding: 15px 30px;">
+                        📝 語文競賽評語
+                    </a>
+                </div>
+
+                <div style="margin-top: 40px;">
+                    <button class="btn nav-trigger" data-target="home" style="background-color: #666;">返回首頁</button>
+                </div>
             </div>
         </section>
 
